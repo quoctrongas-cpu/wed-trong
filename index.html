@@ -14,7 +14,7 @@
                 'bg-paper/95', 'backdrop-blur-md', 'shadow-sm', 'py-3', 'py-6', 
                 'border-ink/10', 'text-ink', 'text-goldLight', 'text-gold', 
                 'border-white', 'text-white', 'border-ink', 'text-inkLight', 
-                'text-white/90', 'border-white/50', 'border-ink/20'
+                'text-white/90', 'border-white/50', 'border-ink/20', 'rotate-3', '-rotate-2', 'rotate-1'
             ],
             theme: {
                 extend: {
@@ -49,201 +49,170 @@
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
             color: #2c2925;
             overflow-x: hidden;
+            /* Ẩn con trỏ mặc định trên desktop để dùng con trỏ custom */
+            cursor: none; 
+        }
+        
+        a, button, [onclick] {
+            cursor: none !important;
+        }
+
+        /* --- CON TRỎ CHUỘT TÙY CHỈNH (CUSTOM CURSOR) --- */
+        @media (pointer: fine) {
+            #cursor-dot {
+                position: fixed;
+                top: 0; left: 0;
+                width: 8px; height: 8px;
+                background-color: #b68d40;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                transition: width 0.2s, height 0.2s, background-color 0.2s;
+            }
+            #cursor-outline {
+                position: fixed;
+                top: 0; left: 0;
+                width: 30px; height: 30px;
+                border: 1px solid rgba(182, 141, 64, 0.5);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9998;
+                transform: translate(-50%, -50%);
+                transition: width 0.2s, height 0.2s, background-color 0.2s;
+            }
+            body:hover #cursor-outline { width: 40px; height: 40px; border-color: rgba(182, 141, 64, 0.8); }
+        }
+        @media (pointer: coarse) {
+            #cursor-dot, #cursor-outline { display: none; }
+            body, a, button, [onclick] { cursor: auto !important; }
         }
 
         /* HIỆU ỨNG LÁ RƠI */
         #leaf-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Để click xuyên qua lá */
-            z-index: 50; /* Nằm dưới thanh menu (z-100) nhưng trên nội dung (z-10) */
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 50; 
         }
-        
         .leaf {
-            position: absolute;
-            top: -50px;
-            color: #b68d40; /* Màu vàng đồng */
-            opacity: 0.7;
+            position: absolute; top: -50px;
+            color: #b68d40; opacity: 0.7;
             animation: fall linear infinite;
         }
-
         @keyframes fall {
-            0% {
-                transform: translate3d(0, -50px, 0) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.7;
-            }
-            90% {
-                opacity: 0.7;
-            }
-            100% {
-                transform: translate3d(20px, 100vh, 0) rotate(360deg);
-                opacity: 0;
-            }
+            0% { transform: translate3d(0, -50px, 0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translate3d(20px, 100vh, 0) rotate(360deg); opacity: 0; }
         }
 
-        /* Khung tạp chí */
-        .magazine-frame {
-            position: absolute;
-            top: 24px;
-            left: 24px;
-            right: 24px;
-            bottom: 24px;
-            border: 1px solid rgba(255,255,255,0.3);
-            pointer-events: none;
-            z-index: 15;
-            border-radius: 4px;
+        /* ĐĨA NHẠC XOAY */
+        @keyframes spin-record {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-        .magazine-frame::before, .magazine-frame::after {
+        .spin-anim {
+            animation: spin-record 4s linear infinite;
+        }
+
+        /* GÓC LƯU BÚT - STICKY NOTES */
+        .sticky-note {
+            position: relative;
+            background: #fef3c7; /* Vàng nhạt */
+            padding: 20px;
+            box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .sticky-note::before {
             content: '';
             position: absolute;
-            width: 1px;
-            height: 40px;
-            background: #dfc282;
-            left: 50%;
-            transform: translateX(-50%);
+            top: -10px; left: 50%;
+            transform: translateX(-50%) rotate(-2deg);
+            width: 60px; height: 20px;
+            background-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            backdrop-filter: blur(2px);
+            z-index: 5;
+        }
+        .sticky-note:hover {
+            transform: translateY(-10px) scale(1.05) !important;
+            box-shadow: 4px 8px 20px rgba(0,0,0,0.15);
+            z-index: 20;
+        }
+        .note-pink { background: #fce7f3; } /* Hồng nhạt */
+        .note-blue { background: #e0f2fe; } /* Xanh nhạt */
+
+        /* Các style khác giữ nguyên... */
+        .magazine-frame {
+            position: absolute; top: 24px; left: 24px; right: 24px; bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.3); pointer-events: none; z-index: 15; border-radius: 4px;
+        }
+        .magazine-frame::before, .magazine-frame::after {
+            content: ''; position: absolute; width: 1px; height: 40px;
+            background: #dfc282; left: 50%; transform: translateX(-50%);
         }
         .magazine-frame::before { top: 0; }
         .magazine-frame::after { bottom: 0; }
 
         .watermark {
-            position: absolute;
-            font-family: 'Playfair Display', serif;
-            font-weight: 900;
-            color: rgba(44, 41, 37, 0.03);
-            user-select: none;
-            pointer-events: none;
-            line-height: 1;
-            white-space: nowrap;
-            z-index: 0;
+            position: absolute; font-family: 'Playfair Display', serif; font-weight: 900;
+            color: rgba(44, 41, 37, 0.03); user-select: none; pointer-events: none;
+            line-height: 1; white-space: nowrap; z-index: 0;
         }
 
         .text-highlight {
             background: linear-gradient(to right, rgba(182, 141, 64, 0.3) 50%, transparent 50%);
-            background-size: 200% 100%;
-            background-position: 100% 0;
-            transition: background-position 0.5s ease;
+            background-size: 200% 100%; background-position: 100% 0; transition: background-position 0.5s ease;
         }
-        .text-highlight:hover {
-            background-position: 0 0;
-        }
+        .text-highlight:hover { background-position: 0 0; }
 
         .editorial-card {
-            background: #ffffff;
-            border: 1px solid rgba(44, 41, 37, 0.08);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            transition: all 0.4s ease;
-            position: relative;
+            background: #ffffff; border: 1px solid rgba(44, 41, 37, 0.08);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.4s ease; position: relative;
         }
         .editorial-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: #b68d40;
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-            transform-origin: left;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: #b68d40; transform: scaleX(0); transition: transform 0.4s ease; transform-origin: left;
         }
         .editorial-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
-            border-color: rgba(182, 141, 64, 0.3);
+            transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); border-color: rgba(182, 141, 64, 0.3);
         }
-        .editorial-card:hover::before {
-            transform: scaleX(1);
-        }
+        .editorial-card:hover::before { transform: scaleX(1); }
 
         .modern-polaroid {
-            background: #ffffff;
-            padding: 12px 12px 45px 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,0,0,0.05);
-            transition: all 0.5s ease;
-            break-inside: avoid;
-            position: relative;
+            background: #ffffff; padding: 12px 12px 45px 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.05); transition: all 0.5s ease; break-inside: avoid; position: relative;
         }
         .modern-polaroid::before {
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #b68d40;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 1px 1px 2px rgba(255,255,255,0.5);
-            opacity: 0.8;
-            z-index: 10;
+            content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+            width: 6px; height: 6px; border-radius: 50%; background: #b68d40;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 1px 1px 2px rgba(255,255,255,0.5); opacity: 0.8; z-index: 10;
         }
         .modern-polaroid:hover {
-            transform: translateY(-8px) scale(1.01);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            border-color: rgba(182, 141, 64, 0.2);
+            transform: translateY(-8px) scale(1.01); box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-color: rgba(182, 141, 64, 0.2);
         }
 
         .drop-cap::first-letter {
-            float: left;
-            font-family: 'Playfair Display', serif;
-            font-size: 4.5rem;
-            line-height: 0.8;
-            padding-right: 0.6rem;
-            padding-top: 0.2rem;
-            color: #b68d40;
-            font-weight: 900;
+            float: left; font-family: 'Playfair Display', serif; font-size: 4.5rem; line-height: 0.8;
+            padding-right: 0.6rem; padding-top: 0.2rem; color: #b68d40; font-weight: 900;
         }
 
         .ornament-divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 2rem 0;
-            opacity: 0.6;
+            display: flex; align-items: center; justify-content: center; margin: 2rem 0; opacity: 0.6;
         }
         .ornament-divider::before, .ornament-divider::after {
-            content: '';
-            height: 1px;
-            width: 50px;
-            background-color: #b68d40;
+            content: ''; height: 1px; width: 50px; background-color: #b68d40;
         }
-        .ornament-divider i {
-            margin: 0 1rem;
-            color: #b68d40;
-            font-size: 0.6rem;
-            transform: rotate(45deg);
-        }
+        .ornament-divider i { margin: 0 1rem; color: #b68d40; font-size: 0.6rem; transform: rotate(45deg); }
 
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
         .slide {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            transition: opacity 2s ease-in-out, transform 8s linear;
-            background-size: cover;
-            background-position: center;
-            transform: scale(1.1);
+            position: absolute; inset: 0; opacity: 0; transition: opacity 2s ease-in-out, transform 8s linear;
+            background-size: cover; background-position: center; transform: scale(1.1);
         }
-        .slide.active {
-            opacity: 1;
-            transform: scale(1);
-        }
+        .slide.active { opacity: 1; transform: scale(1); }
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f4ece6; }
@@ -252,11 +221,31 @@
 </head>
 <body class="font-sans antialiased relative selection:bg-gold selection:text-white">
 
+    <!-- CUSTOM CURSOR -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-outline"></div>
+
+    <!-- MÁY PHÁT NHẠC (AUDIO PLAYER) -->
+    <div id="music-player" class="fixed bottom-6 right-6 z-[100] flex items-center gap-3">
+        <div id="music-tooltip" class="bg-paper border border-gold/30 text-ink text-xs font-serif italic px-3 py-1.5 rounded-full shadow-lg opacity-0 transition-opacity duration-300">
+            Bật nhạc để chill nhé! 🎵
+        </div>
+        <button onclick="toggleMusic()" class="w-14 h-14 bg-ink rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.2)] border-2 border-gold/50 group hover:scale-110 transition-transform">
+            <i id="music-icon" class="fas fa-compact-disc text-gold text-3xl"></i>
+            <!-- Lõi đĩa than -->
+            <div class="absolute w-3 h-3 bg-paper rounded-full border border-ink"></div>
+        </button>
+        <!-- Audio tag ẩn (Nhạc acoustic guitar nhẹ nhàng, không bản quyền) -->
+        <audio id="bg-audio" loop>
+            <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
     <!-- CONTAINER CHỨA HIỆU ỨNG LÁ RƠI -->
     <div id="leaf-container"></div>
 
     <!-- THANH TIẾN TRÌNH CUỘN -->
-    <div class="fixed top-0 left-0 w-full h-1.5 z-[200] bg-transparent">
+    <div class="fixed top-0 left-0 w-full h-1.5 z-[200] bg-transparent pointer-events-none">
         <div class="h-full bg-gradient-to-r from-goldLight to-gold w-0 rounded-r-full" id="scroll-progress"></div>
     </div>
 
@@ -276,13 +265,14 @@
                     </div>
                 </div>
                 
-                <div class="hidden md:flex items-center space-x-10">
-                    <a href="#home" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Trang Bìa</a>
-                    <a href="#about" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Lời Tựa</a>
-                    <a href="#members" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Nhân Vật</a>
-                    <a href="#teachers" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Thầy Cô</a>
-                    <a href="#timeline" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Hành Trình</a>
-                    <a href="#gallery" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Ký Ức</a>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="nav-link text-white/90 text-[11px] uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Trang Bìa</a>
+                    <a href="#about" class="nav-link text-white/90 text-[11px] uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Lời Tựa</a>
+                    <a href="#members" class="nav-link text-white/90 text-[11px] uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Nhân Vật</a>
+                    <a href="#teachers" class="nav-link text-white/90 text-[11px] uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Thầy Cô</a>
+                    <a href="#timeline" class="nav-link text-white/90 text-[11px] uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Hành Trình</a>
+                    <a href="#guestbook" class="nav-link text-white/90 text-[11px] uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Lưu Bút</a>
+                    <a href="#gallery" class="nav-link text-white/90 text-[11px] uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Ký Ức</a>
                 </div>
 
                 <button id="mobile-menu-btn" class="md:hidden text-white text-2xl focus:outline-none transition-colors mt-2">
@@ -292,18 +282,19 @@
         </div>
         
         <div id="mobile-overlay" class="hidden fixed inset-0 bg-ink/80 z-[-1] backdrop-blur-sm" onclick="toggleMobileMenu()"></div>
-        <div id="mobile-menu" class="hidden md:hidden bg-paper absolute top-full left-0 w-full shadow-2xl py-8 flex flex-col items-center space-y-6 text-ink font-serif text-lg border-b-4 border-gold">
+        <div id="mobile-menu" class="hidden md:hidden bg-paper absolute top-full left-0 w-full shadow-2xl py-8 flex flex-col items-center space-y-5 text-ink font-serif text-lg border-b-4 border-gold">
             <a href="#home" onclick="toggleMobileMenu()">Trang Bìa</a>
             <a href="#about" onclick="toggleMobileMenu()">Lời Tựa</a>
             <a href="#members" onclick="toggleMobileMenu()">Nhân Vật</a>
             <a href="#teachers" onclick="toggleMobileMenu()">Thầy Cô</a>
             <a href="#timeline" onclick="toggleMobileMenu()">Hành Trình</a>
+            <a href="#guestbook" onclick="toggleMobileMenu()">Lưu Bút</a>
             <a href="#gallery" onclick="toggleMobileMenu()">Ký Ức</a>
         </div>
     </nav>
 
     <!-- TRANG CHỦ -->
-    <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+    <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden cursor-none">
         <div class="magazine-frame"></div>
 
         <div class="slideshow-container absolute inset-0 z-0">
@@ -352,7 +343,7 @@
                     <h2 class="text-4xl md:text-5xl font-serif font-bold text-ink mb-8 leading-tight">Mảnh Ghép Vô Giá <br><span class="italic text-inkLight font-light">của thanh xuân</span></h2>
                     
                     <p class="text-lg text-inkLight leading-relaxed font-serif text-justify drop-cap mb-6">
-                        Hơn cả một danh xưng của một lớp học, K37B là một <span class="text-highlight font-bold text-ink cursor-default">hệ sinh thái của tình bạn</span>, nơi 41 cá nhân kiệt xuất cùng nhau thêu dệt nên những trang hồi ký vô giá. Dưới vòm trời THCS Anh Sơn, chúng tôi không chỉ học cách tiếp nhận tri thức, mà còn học cách yêu thương và bảo bọc lẫn nhau qua những thăng trầm của tuổi học trò.
+                        Hơn cả một danh xưng của một lớp học, K37B là một <span class="text-highlight font-bold text-ink">hệ sinh thái của tình bạn</span>, nơi 41 cá nhân kiệt xuất cùng nhau thêu dệt nên những trang hồi ký vô giá. Dưới vòm trời THCS Anh Sơn, chúng tôi không chỉ học cách tiếp nhận tri thức, mà còn học cách yêu thương và bảo bọc lẫn nhau qua những thăng trầm của tuổi học trò.
                     </p>
                     
                     <div class="ornament-divider">
@@ -612,8 +603,54 @@
         </div>
     </section>
 
+    <!-- GÓC LƯU BÚT (STICKY NOTES) MỚI THÊM -->
+    <section id="guestbook" class="py-32 bg-paper relative overflow-hidden">
+        <div class="watermark top-10 right-10 text-[10rem] md:text-[15rem] text-gold/5">Ký Tên</div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+            <div class="text-center mb-20 reveal">
+                <p class="font-bold uppercase tracking-[0.3em] text-gold text-xs mb-3 flex justify-center items-center gap-2">
+                    <span class="w-6 h-px bg-gold"></span> Chương 5 <span class="w-6 h-px bg-gold"></span>
+                </p>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-ink">Góc Lưu Bút</h2>
+                <div class="ornament-divider">
+                    <i class="fas fa-pen-nib"></i>
+                </div>
+                <p class="text-inkLight italic mt-2">Nơi gửi gắm những tâm tư chưa kịp nói...</p>
+            </div>
+
+            <!-- Bảng ghim lưu bút -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 p-8 md:p-12 border-8 border-ink/5 bg-paperDark/30 rounded-md relative reveal shadow-inner">
+                
+                <!-- Giấy 1 -->
+                <div class="sticky-note rotate-3">
+                    <p class="font-handwriting text-xl text-ink mb-4 leading-relaxed">"Cảm ơn các cậu vì đã là một phần thanh xuân rực rỡ nhất của tớ. K37B mãi đỉnh!"</p>
+                    <p class="text-right text-xs font-bold uppercase tracking-widest text-gold">- Ẩn danh</p>
+                </div>
+
+                <!-- Giấy 2 -->
+                <div class="sticky-note note-pink -rotate-2 mt-4">
+                    <p class="font-handwriting text-xl text-ink mb-4 leading-relaxed">"Vẫn nhớ như in lần cả lớp bị phạt chạy bộ quanh sân trường. Mệt mà vui kinh khủng =))"</p>
+                    <p class="text-right text-xs font-bold uppercase tracking-widest text-gold">- Cậu bạn bàn cuối</p>
+                </div>
+
+                <!-- Giấy 3 -->
+                <div class="sticky-note note-blue rotate-1 mt-2">
+                    <p class="font-handwriting text-xl text-ink mb-4 leading-relaxed">"Cô Hà ơi, tụi em xin lỗi vì nhiều lần làm cô buồn. Tụi em thương cô nhiều lắm! ❤️"</p>
+                    <p class="text-right text-xs font-bold uppercase tracking-widest text-gold">- Tập thể K37B</p>
+                </div>
+
+                <!-- Giấy 4 -->
+                <div class="sticky-note -rotate-3 mt-8">
+                    <p class="font-handwriting text-xl text-ink mb-4 leading-relaxed">"Hẹn gặp lại nhé, những ngọn lửa nhỏ của trường THCS Anh Sơn. Sẽ mãi nhớ nhau!"</p>
+                    <p class="text-right text-xs font-bold uppercase tracking-widest text-gold">- Hà My</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- KÝ ỨC -->
-    <section id="gallery" class="py-32 bg-paper relative">
+    <section id="gallery" class="py-32 bg-paperDark relative border-y border-ink/5">
         <div class="watermark bottom-20 left-10 text-[6rem] text-gold/5">Kỷ Niệm</div>
 
         <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
@@ -693,45 +730,80 @@
                     node.remove();
                 }
             });
+
+            // Hiện Tooltip nhắc nhở bật nhạc sau 3s
+            setTimeout(() => {
+                const tooltip = document.getElementById('music-tooltip');
+                if(tooltip) {
+                    tooltip.style.opacity = '1';
+                    setTimeout(() => { tooltip.style.opacity = '0'; }, 5000);
+                }
+            }, 3000);
         });
     </script>
 
-    <!-- SCRIPTS GIAO DIỆN -->
+    <!-- SCRIPTS GIAO DIỆN & TƯƠNG TÁC -->
     <script>
-        /* TẠO HIỆU ỨNG LÁ RƠI BẰNG JAVASCRIPT */
+        /* TẠO CON TRỎ CHUỘT TÙY CHỈNH */
+        const dot = document.getElementById("cursor-dot");
+        const outline = document.getElementById("cursor-outline");
+        if(dot && outline) {
+            window.addEventListener("mousemove", function(e) {
+                const posX = e.clientX;
+                const posY = e.clientY;
+                
+                dot.style.left = `${posX}px`;
+                dot.style.top = `${posY}px`;
+                
+                // Outline trễ một chút tạo cảm giác mượt
+                outline.animate({
+                    left: `${posX}px`,
+                    top: `${posY}px`
+                }, { duration: 500, fill: "forwards" });
+            });
+        }
+
+        /* TẠO HIỆU ỨNG LÁ RƠI */
         function createLeaves() {
             const container = document.getElementById('leaf-container');
-            const leafCount = 30; // Số lượng lá rơi cùng lúc
+            const leafCount = 20;
 
             for (let i = 0; i < leafCount; i++) {
                 let leaf = document.createElement('i');
-                // SỬA LỖI: Ghi rõ tiền tố fas (icon thường) và fab (icon thương hiệu lá phong)
                 const leafTypes = ['fas fa-leaf', 'fab fa-canadian-maple-leaf'];
                 const randomLeaf = leafTypes[Math.floor(Math.random() * leafTypes.length)];
                 
                 leaf.className = `${randomLeaf} leaf`;
-                
-                // Random vị trí bắt đầu
                 leaf.style.left = Math.random() * 100 + 'vw';
-                
-                // Random kích thước lá
                 leaf.style.fontSize = (Math.random() * 15 + 10) + 'px';
-                
-                // Random tốc độ rơi (từ 5s đến 15s)
-                leaf.style.animationDuration = (Math.random() * 10 + 5) + 's';
-                
-                // Random thời gian chờ để các lá không rớt cùng lúc
+                leaf.style.animationDuration = (Math.random() * 10 + 8) + 's';
                 leaf.style.animationDelay = Math.random() * 5 + 's';
 
                 container.appendChild(leaf);
             }
         }
-        
-        // Gọi hàm tạo lá rơi khi web load xong
         createLeaves();
 
+        /* TRÌNH PHÁT NHẠC */
+        let isPlaying = false;
+        const audio = document.getElementById("bg-audio");
+        const musicIcon = document.getElementById("music-icon");
+        const tooltip = document.getElementById('music-tooltip');
 
-        // Cập nhật thanh Scroll Progress
+        function toggleMusic() {
+            if(tooltip) tooltip.style.opacity = '0'; // Ẩn tooltip khi người dùng click
+            
+            if (isPlaying) {
+                audio.pause();
+                musicIcon.classList.remove("spin-anim");
+            } else {
+                audio.play();
+                musicIcon.classList.add("spin-anim");
+            }
+            isPlaying = !isPlaying;
+        }
+
+        /* CẬP NHẬT THANH SCROLL PROGRESS */
         window.addEventListener('scroll', () => {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -739,6 +811,7 @@
             document.getElementById("scroll-progress").style.width = scrolled + "%";
         });
 
+        /* HIỆU ỨNG TYPEWRITER */
         const textArray = [
             "Viết tiếp những trang sử rạng rỡ...", 
             "Nơi mỗi cá tính là một vì tinh tú...", 
@@ -755,17 +828,15 @@
             let typeSpeed = isDeleting ? 30 : 60;
             
             if (!isDeleting && charIndex === currentText.length) { 
-                isDeleting = true; 
-                typeSpeed = 2500; 
+                isDeleting = true; typeSpeed = 2500; 
             } else if (isDeleting && charIndex === 0) { 
-                isDeleting = false; 
-                textIndex = (textIndex + 1) % textArray.length; 
-                typeSpeed = 500; 
+                isDeleting = false; textIndex = (textIndex + 1) % textArray.length; typeSpeed = 500; 
             }
             setTimeout(typeWriter, typeSpeed);
         }
         setTimeout(typeWriter, 1000);
 
+        /* SLIDESHOW */
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         function nextSlide() {
@@ -775,6 +846,7 @@
         }
         setInterval(nextSlide, 7000);
 
+        /* NAVBAR ĐỔI MÀU KHI CUỘN */
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             const border = document.getElementById('nav-border');
@@ -817,6 +889,7 @@
             }
         });
 
+        /* HIỆU ỨNG XUẤT HIỆN TỪ TỪ KHI CUỘN (REVEAL) */
         function reveal() {
             document.querySelectorAll('.reveal').forEach(el => {
                 if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('active');
@@ -825,6 +898,7 @@
         window.addEventListener('scroll', reveal);
         reveal(); 
 
+        /* MENU DI ĐỘNG */
         function toggleMobileMenu() {
             document.getElementById('mobile-menu').classList.toggle('hidden');
             document.getElementById('mobile-overlay').classList.toggle('hidden');
