@@ -10,6 +10,12 @@
     
     <script>
         tailwind.config = {
+            safelist: [
+                'bg-paper/95', 'backdrop-blur-md', 'shadow-sm', 'py-3', 'py-6', 
+                'border-ink/10', 'text-ink', 'text-goldLight', 'text-gold', 
+                'border-white', 'text-white', 'border-ink', 'text-inkLight', 
+                'text-white/90', 'border-white/50', 'border-ink/20'
+            ],
             theme: {
                 extend: {
                     fontFamily: {
@@ -216,7 +222,7 @@
 <body class="font-sans antialiased relative selection:bg-gold selection:text-white">
 
     <!-- THANH ĐIỀU HƯỚNG HIỆN ĐẠI -->
-    <nav class="fixed w-full z-[100] transition-all duration-500 py-6" id="navbar">
+    <nav class="fixed top-0 left-0 w-full z-[100] transition-all duration-500 py-6" id="navbar">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex justify-between items-center pb-4 transition-all duration-300" id="nav-border">
                 <div class="flex items-center gap-4 cursor-pointer group" onclick="window.scrollTo(0,0)">
@@ -238,10 +244,11 @@
                     </div>
                 </div>
                 
-                <div class="hidden md:flex items-center space-x-12">
+                <div class="hidden md:flex items-center space-x-10">
                     <a href="#home" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Trang Bìa</a>
                     <a href="#about" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Lời Tựa</a>
                     <a href="#members" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Nhân Vật</a>
+                    <a href="#teachers" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Thầy Cô</a>
                     <a href="#timeline" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Hành Trình</a>
                     <a href="#gallery" class="nav-link text-white/90 text-sm uppercase tracking-widest font-semibold hover:text-gold transition-colors relative">Ký Ức</a>
                 </div>
@@ -257,6 +264,7 @@
             <a href="#home" onclick="toggleMobileMenu()">Trang Bìa</a>
             <a href="#about" onclick="toggleMobileMenu()">Lời Tựa</a>
             <a href="#members" onclick="toggleMobileMenu()">Nhân Vật</a>
+            <a href="#teachers" onclick="toggleMobileMenu()">Thầy Cô</a>
             <a href="#timeline" onclick="toggleMobileMenu()">Hành Trình</a>
             <a href="#gallery" onclick="toggleMobileMenu()">Ký Ức</a>
         </div>
@@ -268,7 +276,7 @@
         <div class="magazine-frame"></div>
 
         <div class="slideshow-container absolute inset-0 z-0">
-            <div class="slide active" style="background-image: url('image_27c6e5.jpg');"></div>
+            <div class="slide active" style="background-image: url('https://i.ibb.co/JFm2NYpd/image.jpg');"></div>
             <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1525921429624-479b6a26d84d?auto=format&fit=crop&w=1920&q=80');"></div>
             <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1920&q=80');"></div>
         </div>
@@ -311,7 +319,7 @@
                 <!-- Bên trái: Text Editorial -->
                 <div class="reveal">
                     <p class="font-bold uppercase tracking-[0.3em] text-gold text-xs mb-4 flex items-center gap-2">
-                        <span class="w-8 h-px bg-gold"></span> Lời Tựa
+                        <span class="w-8 h-px bg-gold"></span> Chương 1
                     </p>
                     <h2 class="text-4xl md:text-5xl font-serif font-bold text-ink mb-8 leading-tight">Mảnh Ghép Vô Giá <br><span class="italic text-inkLight font-light">của thanh xuân</span></h2>
                     
@@ -372,7 +380,7 @@
                 </div>
             </div>
 
-            <!-- Lưới Ban cán sự (Cập nhật Tên đầy đủ) -->
+            <!-- Lưới Ban cán sự -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Card 1 -->
                 <div class="editorial-card p-8 flex flex-col items-center text-center reveal rounded-sm group">
@@ -417,12 +425,132 @@
         </div>
     </section>
 
-    <!-- DÒNG THỜI GIAN (TIMELINE - BỔ SUNG MỚI) -->
-    <section id="timeline" class="py-32 bg-paper relative border-b border-ink/5">
+    <!-- GIÁO VIÊN (TEACHERS - BỔ SUNG MỚI) -->
+    <section id="teachers" class="py-32 bg-paper relative">
+        <!-- Text chìm -->
+        <div class="watermark top-20 left-10 text-[8rem] text-ink/5">Thầy Cô</div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+            <div class="text-center mb-20 reveal">
+                <p class="font-bold uppercase tracking-[0.3em] text-gold text-xs mb-3 flex justify-center items-center gap-2">
+                    <span class="w-6 h-px bg-gold"></span> Chương 3 <span class="w-6 h-px bg-gold"></span>
+                </p>
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-ink">Những Người Lái Đò</h2>
+                <div class="ornament-divider">
+                    <i class="fas fa-chalkboard-user"></i>
+                </div>
+            </div>
+
+            <!-- GVCN Cô Hà -->
+            <div class="editorial-card p-8 md:p-12 mb-12 reveal rounded-sm relative overflow-hidden group border border-gold/30">
+                <div class="absolute -right-16 -top-16 w-48 h-48 bg-gold/5 rounded-full group-hover:scale-150 transition-transform duration-700"></div>
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                    <div class="w-28 h-28 shrink-0 border border-ink/10 shadow-md rounded-full flex items-center justify-center text-gold text-4xl bg-paperDark z-10">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="text-center md:text-left z-10">
+                        <p class="font-bold uppercase tracking-[0.2em] text-[10px] text-gold mb-2">Giáo Viên Chủ Nhiệm & Ngữ Văn</p>
+                        <h3 class="text-3xl font-serif font-bold text-ink mb-4">Cô Hà</h3>
+                        <p class="text-inkLight text-base leading-relaxed italic border-l-[3px] border-gold pl-5">
+                            "Người mẹ hiền thứ hai của đại gia đình 7B. Bằng ngọn lửa nhiệt huyết và những bài giảng đong đầy cảm xúc, cô không chỉ truyền đạt vẻ đẹp của văn chương mà còn bao dung, uốn nắn từng tâm hồn nhỏ bé trở nên sâu sắc và trưởng thành hơn qua mỗi tháng năm."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Các giáo viên bộ môn -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal">
+                
+                <div class="bg-white border border-ink/10 p-6 flex items-center gap-5 hover:border-gold hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-paperDark flex items-center justify-center text-gold text-lg shrink-0 border border-ink/5"><i class="fas fa-square-root-variable"></i></div>
+                    <div>
+                        <p class="font-bold uppercase tracking-[0.2em] text-[9px] text-inkLight mb-1">Toán Học</p>
+                        <h4 class="font-serif font-bold text-lg text-ink">Thầy Linh</h4>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-ink/10 p-6 flex items-center gap-5 hover:border-gold hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-paperDark flex items-center justify-center text-gold text-lg shrink-0 border border-ink/5"><i class="fas fa-microchip"></i></div>
+                    <div>
+                        <p class="font-bold uppercase tracking-[0.2em] text-[9px] text-inkLight mb-1">Tiếng Anh & Công Nghệ</p>
+                        <h4 class="font-serif font-bold text-lg text-ink flex items-center">Thầy Dũng <span class="text-[9px] font-sans text-gold border border-gold/30 rounded-full px-2 py-0.5 ml-2 font-bold tracking-wider">WATCHES</span></h4>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-ink/10 p-6 flex items-center gap-5 hover:border-gold hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-paperDark flex items-center justify-center text-gold text-lg shrink-0 border border-ink/5"><i class="fas fa-atom"></i></div>
+                    <div>
+                        <p class="font-bold uppercase tracking-[0.2em] text-[9px] text-inkLight mb-1">Vật Lý & Tin Học</p>
+                        <h4 class="font-serif font-bold text-lg text-ink flex items-center">Thầy Dũng <span class="text-[9px] font-sans text-gold border border-gold/30 rounded-full px-2 py-0.5 ml-2 font-bold tracking-wider">AI</span></h4>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-ink/10 p-6 flex items-center gap-5 hover:border-gold hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-paperDark flex items-center justify-center text-gold text-lg shrink-0 border border-ink/5"><i class="fas fa-flask"></i></div>
+                    <div>
+                        <p class="font-bold uppercase tracking-[0.2em] text-[9px] text-inkLight mb-1">Hóa Học</p>
+                        <h4 class="font-serif font-bold text-lg text-ink flex items-center">Thầy Dũng <span class="text-[9px] font-sans text-gold border border-gold/30 rounded-full px-2 py-0.5 ml-2 font-bold tracking-wider">???</span></h4>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-ink/10 p-6 flex items-center gap-5 hover:border-gold hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-paperDark flex items-center justify-center text-gold text-lg shrink-0 border border-ink/5"><i class="fas fa-landmark"></i></div>
+                    <div>
+                        <p class="font-bold uppercase tracking-[0.2em] text-[9px] text-inkLight mb-1">Lịch Sử</p>
+                        <h4 class="font-serif font-bold text-lg text-ink">Cô Phượng</h4>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-ink/10 p-6 flex items-center gap-5 hover:border-gold hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-paperDark flex items-center justify-center text-gold text-lg shrink-0 border border-ink/5"><i class="fas fa-globe"></i></div>
+                    <div>
+                        <p class="font-bold uppercase tracking-[0.2em] text-[9px] text-inkLight mb-1">Địa Lý</p>
+                        <h4 class="font-serif font-bold text-lg text-ink">Cô Hoàn</h4>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-ink/10 p-6 flex items-center gap-5 hover:border-gold hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-paperDark flex items-center justify-center text-gold text-lg shrink-0 border border-ink/5"><i class="fas fa-dna"></i></div>
+                    <div>
+                        <p class="font-bold uppercase tracking-[0.2em] text-[9px] text-inkLight mb-1">Sinh Học</p>
+                        <h4 class="font-serif font-bold text-lg text-ink">Cô Yến & Cô Thảo</h4>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-ink/10 p-6 flex items-center gap-5 hover:border-gold hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-paperDark flex items-center justify-center text-gold text-lg shrink-0 border border-ink/5"><i class="fas fa-scale-balanced"></i></div>
+                    <div>
+                        <p class="font-bold uppercase tracking-[0.2em] text-[9px] text-inkLight mb-1">GDCD & GDĐP</p>
+                        <h4 class="font-serif font-bold text-lg text-ink">Cô Thương</h4>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-ink/10 p-6 flex items-center gap-5 hover:border-gold hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-paperDark flex items-center justify-center text-gold text-lg shrink-0 border border-ink/5"><i class="fas fa-music"></i></div>
+                    <div>
+                        <p class="font-bold uppercase tracking-[0.2em] text-[9px] text-inkLight mb-1">Âm Nhạc & GDTC</p>
+                        <h4 class="font-serif font-bold text-lg text-ink">Thầy Lâm</h4>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-ink/10 p-6 flex items-center gap-5 hover:border-gold hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-full bg-paperDark flex items-center justify-center text-gold text-lg shrink-0 border border-ink/5"><i class="fas fa-palette"></i></div>
+                    <div>
+                        <p class="font-bold uppercase tracking-[0.2em] text-[9px] text-inkLight mb-1">Mỹ Thuật</p>
+                        <h4 class="font-serif font-bold text-lg text-ink">Thầy Hiền</h4>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- DÒNG THỜI GIAN (TIMELINE) -->
+    <section id="timeline" class="py-32 bg-paperDark relative border-y border-ink/5">
         <div class="max-w-4xl mx-auto px-6 lg:px-12 relative z-10">
             <div class="text-center mb-20 reveal">
                 <p class="font-bold uppercase tracking-[0.3em] text-gold text-xs mb-3 flex items-center justify-center gap-2">
-                    <span class="w-6 h-px bg-gold"></span> Chương 3 <span class="w-6 h-px bg-gold"></span>
+                    <span class="w-6 h-px bg-gold"></span> Chương 4 <span class="w-6 h-px bg-gold"></span>
                 </p>
                 <h2 class="text-4xl md:text-5xl font-serif font-bold text-ink">Dòng Thời Gian</h2>
                 <div class="w-16 h-px bg-ink/20 mx-auto mt-6"></div>
@@ -477,7 +605,7 @@
     </section>
 
     <!-- KÝ ỨC (MASONRY GALLERY HIỆN ĐẠI) -->
-    <section id="gallery" class="py-32 bg-paperDark relative">
+    <section id="gallery" class="py-32 bg-paper relative">
         <div class="watermark bottom-20 left-10 text-[6rem] text-gold/5">Kỷ Niệm</div>
 
         <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
@@ -497,7 +625,7 @@
                 <!-- Khung ảnh 1 (Ảnh upload của người dùng) -->
                 <div class="modern-polaroid group">
                     <div class="overflow-hidden relative">
-                        <img src="image_27c6e5.jpg" class="w-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Tập thể lớp">
+                        <img src="https://i.ibb.co/JFm2NYpd/image.jpg" class="w-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Tập thể lớp">
                         <div class="absolute inset-0 bg-ink/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                     <p class="font-handwriting text-3xl text-center mt-6 text-ink font-bold group-hover:text-gold transition-colors">Đại gia đình 7B</p>
