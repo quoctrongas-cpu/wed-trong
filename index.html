@@ -106,13 +106,23 @@
             100% { transform: translate3d(20px, 100vh, 0) rotate(360deg); opacity: 0; }
         }
 
-        /* ĐĨA NHẠC XOAY */
-        @keyframes spin-record {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        /* --- HIỆU ỨNG THẢ TIM --- */
+        @keyframes float-heart {
+            0% { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 1; }
+            100% { transform: translate(calc(var(--tx) * 1px), calc(var(--ty) * 1px)) scale(calc(var(--scale))) rotate(calc(var(--rot) * 1deg)); opacity: 0; }
         }
-        .spin-anim {
-            animation: spin-record 4s linear infinite;
+        .floating-heart {
+            position: fixed; pointer-events: none; z-index: 9999;
+            /* Animation được xử lý bằng Javascript để tạo độ random */
+            text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        /* --- BỤI PHẤN (MAGIC TRAIL) NÂNG CẤP --- */
+        .dust-particle {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
         }
 
         /* GÓC LƯU BÚT - STICKY NOTES */
@@ -225,20 +235,17 @@
     <div id="cursor-dot"></div>
     <div id="cursor-outline"></div>
 
-    <!-- MÁY PHÁT NHẠC (AUDIO PLAYER) -->
-    <div id="music-player" class="fixed bottom-6 right-6 z-[100] flex items-center gap-3">
-        <div id="music-tooltip" class="bg-paper border border-gold/30 text-ink text-xs font-serif italic px-3 py-1.5 rounded-full shadow-lg opacity-0 transition-opacity duration-300">
-            Bật nhạc để chill nhé! 🎵
+    <!-- GÓC THẢ TIM -->
+    <div class="fixed bottom-6 right-6 z-[100] flex flex-col items-end gap-2">
+        <div id="heart-tooltip" class="bg-paper border border-gold/30 text-ink text-xs font-serif italic px-3 py-1.5 rounded-full shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none mr-1">
+            Thả tim cho lớp mình! ❤️
         </div>
-        <button onclick="toggleMusic()" class="w-14 h-14 bg-ink rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.2)] border-2 border-gold/50 group hover:scale-110 transition-transform">
-            <i id="music-icon" class="fas fa-compact-disc text-gold text-3xl"></i>
-            <!-- Lõi đĩa than -->
-            <div class="absolute w-3 h-3 bg-paper rounded-full border border-ink"></div>
-        </button>
-        <!-- Audio tag ẩn (Nhạc acoustic guitar nhẹ nhàng, không bản quyền) -->
-        <audio id="bg-audio" loop>
-            <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
-        </audio>
+        <div class="relative group">
+            <button onclick="dropHearts()" class="w-14 h-14 bg-ink rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.2)] border-2 border-gold/50 hover:bg-gold transition-colors duration-300">
+                <i id="heart-icon" class="fas fa-heart text-gold group-hover:text-white text-2xl transition-all duration-300"></i>
+            </button>
+            <span id="heart-counter" class="absolute -top-1 -right-1 bg-[#f43f5e] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md border border-white">99</span>
+        </div>
     </div>
 
     <!-- CONTAINER CHỨA HIỆU ỨNG LÁ RƠI -->
@@ -731,9 +738,9 @@
                 }
             });
 
-            // Hiện Tooltip nhắc nhở bật nhạc sau 3s
+            // Hiện Tooltip nhắc nhở thả tim sau 3s
             setTimeout(() => {
-                const tooltip = document.getElementById('music-tooltip');
+                const tooltip = document.getElementById('heart-tooltip');
                 if(tooltip) {
                     tooltip.style.opacity = '1';
                     setTimeout(() => { tooltip.style.opacity = '0'; }, 5000);
@@ -744,9 +751,42 @@
 
     <!-- SCRIPTS GIAO DIỆN & TƯƠNG TÁC -->
     <script>
-        /* TẠO CON TRỎ CHUỘT TÙY CHỈNH */
+        /* TẠO CON TRỎ CHUỘT TÙY CHỈNH & BỤI PHẤN NÂNG CẤP */
         const dot = document.getElementById("cursor-dot");
         const outline = document.getElementById("cursor-outline");
+        
+        function createDust(x, y) {
+            const dust = document.createElement('div');
+            dust.className = 'dust-particle';
+            const size = Math.random() * 5 + 3; // Lớn hơn: 3-8px
+            dust.style.width = size + 'px';
+            dust.style.height = size + 'px';
+            dust.style.left = x + 'px';
+            dust.style.top = y + 'px';
+            
+            // Trộn màu lung linh hơn: Vàng đồng, Vàng sáng, Trắng lấp lánh
+            const colors = ['#b68d40', '#dfc282', '#ffffff'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            dust.style.background = color;
+            dust.style.boxShadow = `0 0 ${size * 1.5}px ${color}`; // Phát sáng rực hơn
+            
+            document.body.appendChild(dust);
+            
+            // Bay tứ tung và bay cao hơn
+            const tx = (Math.random() - 0.5) * 100;
+            const ty = (Math.random() - 0.5) * 100; 
+            
+            dust.animate([
+                { transform: `translate(-50%, -50%) scale(1)`, opacity: 1 },
+                { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 1000 + 600, // Tồn tại lâu hơn (0.6s - 1.6s)
+                easing: 'ease-out',
+                fill: 'forwards'
+            });
+            setTimeout(() => dust.remove(), 1600);
+        }
+
         if(dot && outline) {
             window.addEventListener("mousemove", function(e) {
                 const posX = e.clientX;
@@ -760,6 +800,10 @@
                     left: `${posX}px`,
                     top: `${posY}px`
                 }, { duration: 500, fill: "forwards" });
+
+                // Tăng số lượng bụi phấn văng ra (bay theo mọi chuyển động chuột)
+                createDust(posX, posY);
+                if (Math.random() > 0.5) createDust(posX, posY); // Thỉnh thoảng văng 2 hạt
             });
         }
 
@@ -784,69 +828,72 @@
         }
         createLeaves();
 
-        /* TRÌNH PHÁT NHẠC */
-        let isPlaying = false;
-        const audio = document.getElementById("bg-audio");
-        const musicIcon = document.getElementById("music-icon");
-        const tooltip = document.getElementById('music-tooltip');
-
-        function toggleMusic() {
-            if(tooltip) tooltip.style.opacity = '0'; // Ẩn tooltip khi người dùng click
+        /* TÍNH NĂNG: THẢ TIM TƯƠNG TÁC (DROP HEARTS) ĐẸP MẮT */
+        let heartCount = 99;
+        function dropHearts() {
+            const tooltip = document.getElementById('heart-tooltip');
+            if(tooltip) tooltip.style.opacity = '0'; // Ẩn tooltip
             
-            if (isPlaying) {
-                audio.pause();
-                musicIcon.classList.remove("spin-anim");
-            } else {
-                audio.play();
-                musicIcon.classList.add("spin-anim");
+            const btn = document.querySelector('button[onclick="dropHearts()"]');
+            const rect = btn.getBoundingClientRect();
+            
+            // Văng ra 10 trái tim mỗi lần bấm (nhiều hơn, đã mắt hơn)
+            for(let i = 0; i < 10; i++) {
+                const heart = document.createElement('i');
+                heart.className = 'fas fa-heart floating-heart';
+                
+                // Điểm xuất phát
+                heart.style.left = (rect.left + rect.width/2 - 10 + (Math.random()*40-20)) + 'px';
+                heart.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+                
+                // RANDOM HÓA QUỸ ĐẠO BẰNG CSS VARIABLES
+                const tx = (Math.random() - 0.5) * 150; // Bay lệch ngang trái/phải ngẫu nhiên
+                const ty = -(Math.random() * 200 + 150); // Chiều cao bay ngẫu nhiên (-150px đến -350px)
+                const rot = Math.random() * 90 - 45; // Góc xoay ngẫu nhiên
+                const scale = Math.random() * 1 + 1; // Kích thước to ra ngẫu nhiên
+                
+                heart.style.setProperty('--tx', tx);
+                heart.style.setProperty('--ty', ty);
+                heart.style.setProperty('--rot', rot);
+                heart.style.setProperty('--scale', scale);
+                
+                // RANDOM HÓA THỜI GIAN
+                const duration = Math.random() * 1.5 + 1; // Bay chậm/nhanh ngẫu nhiên từ 1s đến 2.5s
+                
+                // Loại bỏ delay và đổi sang ease-out để tim bay ra ngay lập tức và mượt hơn
+                heart.style.animation = `float-heart ${duration}s ease-out forwards`;
+                
+                // Trộn màu tông đỏ, hồng và vàng
+                const colors = ['#f43f5e', '#fb7185', '#fda4af', '#e11d48', '#be123c', '#dfc282'];
+                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Size ban đầu ngẫu nhiên
+                heart.style.fontSize = (Math.random() * 12 + 10) + 'px'; 
+                
+                document.body.appendChild(heart);
+                
+                // Xóa tim dựa trên tổng thời gian bay
+                setTimeout(() => heart.remove(), duration * 1000);
             }
-            isPlaying = !isPlaying;
+            
+            // Tăng biến đếm
+            heartCount++;
+            const counterEl = document.getElementById('heart-counter');
+            if(counterEl) counterEl.innerText = heartCount > 999 ? '999+' : heartCount;
+            
+            // Hiệu ứng phình to icon tim chính
+            const icon = document.getElementById('heart-icon');
+            if(icon) {
+                icon.classList.add('scale-125', 'text-white');
+                icon.classList.remove('text-gold');
+                setTimeout(() => {
+                    icon.classList.remove('scale-125', 'text-white');
+                    icon.classList.add('text-gold');
+                }, 200);
+            }
         }
 
         /* CẬP NHẬT THANH SCROLL PROGRESS */
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById("scroll-progress").style.width = scrolled + "%";
-        });
-
-        /* HIỆU ỨNG TYPEWRITER */
-        const textArray = [
-            "Viết tiếp những trang sử rạng rỡ...", 
-            "Nơi mỗi cá tính là một vì tinh tú...", 
-            "K37B Anh Sơn - Tự hào và Kiêu hãnh!"
-        ];
-        let textIndex = 0, charIndex = 0, isDeleting = false;
-        const typewriterSpan = document.getElementById("typewriter");
-
-        function typeWriter() {
-            const currentText = textArray[textIndex];
-            typewriterSpan.innerHTML = isDeleting ? currentText.substring(0, charIndex - 1) : currentText.substring(0, charIndex + 1);
-            charIndex = isDeleting ? charIndex - 1 : charIndex + 1;
-            
-            let typeSpeed = isDeleting ? 30 : 60;
-            
-            if (!isDeleting && charIndex === currentText.length) { 
-                isDeleting = true; typeSpeed = 2500; 
-            } else if (isDeleting && charIndex === 0) { 
-                isDeleting = false; textIndex = (textIndex + 1) % textArray.length; typeSpeed = 500; 
-            }
-            setTimeout(typeWriter, typeSpeed);
-        }
-        setTimeout(typeWriter, 1000);
-
-        /* SLIDESHOW */
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        function nextSlide() {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }
-        setInterval(nextSlide, 7000);
-
-        /* NAVBAR ĐỔI MÀU KHI CUỘN */
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             const border = document.getElementById('nav-border');
